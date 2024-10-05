@@ -4,13 +4,15 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "tb_role")
+@Table(name = "tb_roles")
 public class Role {
 
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id
 	@Column(name = "role_id")
 	private Long roleId;
 	
@@ -41,6 +43,12 @@ public class Role {
 		Values(long roleId) {
 			this.roleId = roleId;
 		}
+
+		
+		public long getRoleId() {
+			return roleId;
+		}
+		
 	}
 	
 	
