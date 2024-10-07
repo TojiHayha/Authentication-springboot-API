@@ -21,7 +21,7 @@ public class LoginController {
 
 	private final JwtEncoder jwtEncoder;
 	private final UserRepository userRepository;
-	private BCryptPasswordEncoder passwordEncoder;
+	private final BCryptPasswordEncoder passwordEncoder;
 	
 	
 	public LoginController(JwtEncoder jwtEncoder, 
