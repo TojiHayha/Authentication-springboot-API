@@ -1,6 +1,7 @@
 package tech.authentication.securityauth.controllers;
 
 import java.time.Instant;
+import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import tech.authentication.securityauth.dto.LoginRequestDto;
 import tech.authentication.securityauth.dto.LoginResponseDto;
+import tech.authentication.securityauth.entities.Role;
 import tech.authentication.securityauth.repositories.UserRepository;
 
 @RestController
@@ -43,11 +45,17 @@ public class LoginController {
 		var now = Instant.now();
 		var expiresIn = 600L; 
 		
+		var scopes = user.get().getRoles()
+				.stream()
+				.map(Role::getName)
+				.collect(Collectors.joining(" "));
+		
 		var claims = JwtClaimsSet.builder()
 				.issuer("securityAuth")
 				.subject(user.get().getUserId().toString())
 				.issuedAt(now)
 				.expiresAt(now.plusSeconds(expiresIn))
+				.claim("scope", scopes)
 				.build();
 				
 		var jwtValue = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
