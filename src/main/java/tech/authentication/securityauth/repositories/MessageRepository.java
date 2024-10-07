@@ -7,5 +7,5 @@ import tech.authentication.securityauth.entities.Message;
 
 @Repository
 public interface MessageRepository extends JpaRepository<Message, Long> {
-
+	
 }

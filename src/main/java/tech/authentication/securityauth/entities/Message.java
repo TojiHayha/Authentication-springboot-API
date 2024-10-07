@@ -20,7 +20,7 @@ public class Message {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	@Column(name = "message_id")
-	private Long tweetId;
+	private Long messageId;
 	
 	private String content;
 	
@@ -31,12 +31,12 @@ public class Message {
 	@JoinColumn(name = "user_id")
 	private User user;
 
-	public Long getTweetId() {
-		return tweetId;
+	public Long getMessageId() {
+		return messageId;
 	}
 
-	public void setTweetId(Long tweetId) {
-		this.tweetId = tweetId;
+	public void setTweetId(Long messageId) {
+		this.messageId = messageId;
 	}
 
 	public String getContent() {
