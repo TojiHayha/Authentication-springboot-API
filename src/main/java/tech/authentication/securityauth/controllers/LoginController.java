@@ -1,65 +1,28 @@
 package tech.authentication.securityauth.controllers;
 
-import java.time.Instant;
-import java.util.stream.Collectors;
-
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.oauth2.jwt.JwtClaimsSet;
-import org.springframework.security.oauth2.jwt.JwtEncoder;
-import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import tech.authentication.securityauth.dto.LoginRequestDto;
 import tech.authentication.securityauth.dto.LoginResponseDto;
-import tech.authentication.securityauth.entities.Role;
-import tech.authentication.securityauth.repositories.UserRepository;
+import tech.authentication.securityauth.services.LoginService;
 
 @RestController
 public class LoginController {
 
-	private final JwtEncoder jwtEncoder;
-	private final UserRepository userRepository;
-	private final BCryptPasswordEncoder passwordEncoder;
+	private final LoginService loginService;
 	
 	
-	public LoginController(JwtEncoder jwtEncoder, 
-						UserRepository userRepository,
-						BCryptPasswordEncoder passwordEncoder) {
-		this.jwtEncoder = jwtEncoder; 
-		this.userRepository = userRepository; 
-		this.passwordEncoder = passwordEncoder;
+	public LoginController(LoginService loginService) {
+		this.loginService = loginService;
 	}
 	
 	@PostMapping("/login")
-	public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequest){
-		var user = userRepository.findByUsername(loginRequest.username());
-		
-		if(user.isEmpty() || !user.get().isLoginCorrect(loginRequest, passwordEncoder)) {
-			throw new BadCredentialsException("user or password is invalid!");
-		}
-		
-		var now = Instant.now();
-		var expiresIn = 600L; 
-		
-		var scopes = user.get().getRoles()
-				.stream()
-				.map(Role::getName)
-				.collect(Collectors.joining(" "));
-		
-		var claims = JwtClaimsSet.builder()
-				.issuer("securityAuth")
-				.subject(user.get().getUserId().toString())
-				.issuedAt(now)
-				.expiresAt(now.plusSeconds(expiresIn))
-				.claim("scope", scopes)
-				.build();
-				
-		var jwtValue = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
-		
-		return ResponseEntity.ok(new LoginResponseDto(jwtValue, expiresIn));
+	public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto){
+		LoginResponseDto response = loginService.authenticate(loginRequestDto);
+		return ResponseEntity.ok(response);
 	}
+	
 }
