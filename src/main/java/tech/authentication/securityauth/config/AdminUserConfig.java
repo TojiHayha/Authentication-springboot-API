@@ -33,13 +33,14 @@ public class AdminUserConfig implements CommandLineRunner {
 		
 		var roleAdmin = roleRepository.findByName(Role.Values.ADMIN.name());
 	
-		var userAdmin = userRepository.findByUsername("admin");
+		var userAdmin = userRepository.findByEmail("admin@gmail.com");
 		
 		userAdmin.ifPresentOrElse(
 				user -> System.out.println("admin ja existe"),
 				() -> {
 					var user = new User();
 					user.setUsername("admin");
+					user.setEmail("admin@gmail.com");
 					user.setPassword(passwordEncoder.encode("123"));
 					user.setRoles(Set.of(roleAdmin));
 					userRepository.save(user);

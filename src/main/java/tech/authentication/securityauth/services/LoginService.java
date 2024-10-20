@@ -32,7 +32,7 @@ public class LoginService {
 	}
 	
 	public LoginResponseDto authenticate(LoginRequestDto loginRequest){
-		var user = userRepository.findByUsername(loginRequest.username());
+		var user = userRepository.findByEmail(loginRequest.email());
 		
 		if(user.isEmpty() || !user.get().isLoginCorrect(loginRequest, passwordEncoder)) {
 			throw new BadCredentialsException("user or password is invalid!");

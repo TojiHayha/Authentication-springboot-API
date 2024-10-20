@@ -31,7 +31,7 @@ public class MessageService {
 	public FeedDto getFeed(int page, int pageSize) {
 		
 		var messages = messageRepository.findAll(PageRequest.of(page, pageSize, Sort.Direction.DESC, "creationTimestamp"))
-				.map(message -> new FeedItemDto(message.getMessageId(), message.getContent(), message.getUser().getUsername()));
+				.map(message -> new FeedItemDto(message.getMessageId(), message.getContent(), message.getUser().getEmail()));
 		
 		return new FeedDto(messages.getContent(), page, pageSize, messages.getTotalPages(), messages.getTotalElements());
 	}

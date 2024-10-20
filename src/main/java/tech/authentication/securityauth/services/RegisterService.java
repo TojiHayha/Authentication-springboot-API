@@ -33,13 +33,14 @@ public class RegisterService {
 		
 		var basicRole = roleRepository.findByName(Role.Values.BASIC.name());
 		
-		var userFromDb = userRepository.findByUsername(registerDto.username());
+		var userFromDb = userRepository.findByEmail(registerDto.email());
 		if(userFromDb.isPresent()) {
 			throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY);
 		}
 		
 		var user = new User();
 		user.setUsername(registerDto.username());
+		user.setEmail(registerDto.email());
 		user.setPassword(passwordEncoder.encode(registerDto.password()));
 		user.setRoles(Set.of(basicRole));
 		

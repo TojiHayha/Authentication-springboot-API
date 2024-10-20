@@ -27,8 +27,10 @@ public class User {
 	@Column(name = "user_id")
 	private UUID userId;
 	
-	@Column(unique = true)
 	private String username;
+	
+	@Column(unique = true)
+	private String email;
 	
 	private String password;
 	
@@ -50,6 +52,14 @@ public class User {
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public String getPassword() {
